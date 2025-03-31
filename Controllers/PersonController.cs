@@ -29,7 +29,7 @@ namespace rinha_de_backend_2023.Controllers
 
         // Para fazer uma busca por pessoas.
         [HttpGet("pessoas")]
-        public IActionResult SearchPessoas([FromQuery] String t) {
+        public IActionResult SearchPessoas([FromQuery] string t) {
             return Ok(t);
         }
     }

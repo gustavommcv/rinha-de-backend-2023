@@ -16,7 +16,8 @@ public class Person
     [RegularExpression(@"^\d{4}-\d{2}-\d{2}$")]
     public string Nascimento { get; set; }
 
-    // TODO - Stack
+   [MaxStringLength(32)]
+    public List<string>? Stack { get; set; }
 
     public Person(string apelido, string nome, string nascimento) {
         Apelido = apelido;
@@ -26,6 +27,6 @@ public class Person
 
     public override string ToString()
     {
-        return $"Apelido: {Apelido}, Nome: {Nome}, Nascimento: {Nascimento}";
+        return $"Apelido: {Apelido}, Nome: {Nome}, Nascimento: {Nascimento}, Stack: {string.Join(", ", Stack)}";
     }
 }
