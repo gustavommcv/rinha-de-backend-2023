@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rinha_api
+    ports:
+      - "80:8080"
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      DB_CONNECTION_STRING: "Host=postgres_db;Port=5432;Database=rinha_db;Username=sample_user;Password=sample_password"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postgres_db:
+    image: postgres:17.4
+    container_name: postgres
+    environment:
+      POSTGRES_USER: sample_user
+      POSTGRES_PASSWORD: sample_password
+      POSTGRES_DB: rinha_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sample_user -d rinha_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

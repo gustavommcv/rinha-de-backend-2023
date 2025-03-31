@@ -1,9 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace rinha_de_backend_2023.Entities;
 
 public class Person 
 {
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
     [Required(ErrorMessage = "O apelido é obrigatório.")]
     [StringLength(32)]
     public string Apelido { get; set; }
@@ -14,6 +18,7 @@ public class Person
 
     [Required(ErrorMessage = "A data de nascimento é obrigatória.")]
     [RegularExpression(@"^\d{4}-\d{2}-\d{2}$")]
+    [CustomValidation(typeof(Person), nameof(ValidateNascimento))]
     public string Nascimento { get; set; }
 
    [MaxStringLength(32)]
@@ -25,8 +30,29 @@ public class Person
         Nascimento = nascimento;
     }
 
-    public override string ToString()
+    public static ValidationResult? ValidateNascimento(string nascimento, ValidationContext context)
     {
-        return $"Apelido: {Apelido}, Nome: {Nome}, Nascimento: {Nascimento}, Stack: {string.Join(", ", Stack)}";
+        if (!DateTime.TryParseExact(nascimento, "yyyy-MM-dd", 
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out var data))
+        {
+            return new ValidationResult("Data inválida.");
+        }
+
+        if (data > DateTime.Now)
+        {
+            return new ValidationResult("Data não pode ser futura.");
+        }
+
+        if (data.Year < 1900)
+        {
+            return new ValidationResult("Data muito antiga.");
+        }
+
+        return ValidationResult.Success;
+    }
+
+   public override string ToString()
+    {
+        return $"Id: {Id}, Apelido: {Apelido}, Nome: {Nome}, Nascimento: {Nascimento}, Stack: {(Stack != null ? string.Join(", ", Stack) : "null")}";
     }
 }
