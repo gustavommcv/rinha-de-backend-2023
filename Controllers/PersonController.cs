@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using rinha_de_backend_2023.Entities;
 
 namespace rinha_de_backend_2023.Controllers
 {
@@ -13,7 +14,10 @@ namespace rinha_de_backend_2023.Controllers
 
         // Para criar um recurso pessoa.
         [HttpPost("pessoas")]
-        public IActionResult PostPessoa() {
+        public IActionResult PostPessoa(Person pessoa) {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            Console.WriteLine(pessoa.ToString());
             return Created();
         }
 
