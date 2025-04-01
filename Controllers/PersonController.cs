@@ -14,7 +14,8 @@ namespace rinha_de_backend_2023.Controllers {
         // Endpoint especial para contagem de pessoas cadastradas.
         [HttpGet("contagem-pessoas")]
         public async Task<IActionResult> ContagemPessoas() {
-            return Ok(1);
+            var count = await _repository.GetPersonCount();
+            return Ok(count);
         }
 
         // Para criar um recurso pessoa.
