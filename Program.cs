@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using rinha_de_backend_2023.Context;
+using rinha_de_backend_2023.Contracts;
+using rinha_de_backend_2023.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +14,12 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
     throw new InvalidOperationException("A variável de ambiente 'DB_CONNECTION_STRING' não foi configurada.");
 
 // Configuring db context
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString)
-);
+builder.Services.AddDbContextPool<AppDbContext>(options => {
+    options.UseNpgsql(connectionString);
+}); // Can configure the pool size
+
+// Repository registered
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 var app = builder.Build();
 
