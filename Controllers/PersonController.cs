@@ -51,7 +51,7 @@ namespace rinha_de_backend_2023.Controllers {
         // Para fazer uma busca por pessoas.
         [HttpGet("pessoas")]
         public async Task<IActionResult> SearchPessoas([FromQuery] string t) {
-            return Ok(t);
+            return Ok(await _repository.SearchPeople(t));
         }
     }
 }

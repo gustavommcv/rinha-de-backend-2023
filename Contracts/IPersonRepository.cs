@@ -6,4 +6,5 @@ public interface IPersonRepository {
     Task<Person> AddPerson(Person person);
     Task<Person> GetPersonById(Guid id);
     Task<int> GetPersonCount();
+    Task<List<Person>> SearchPeople(string t);
 }
