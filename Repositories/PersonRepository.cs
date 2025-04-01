@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using rinha_de_backend_2023.Context;
 using rinha_de_backend_2023.Contracts;

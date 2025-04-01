@@ -7,9 +7,7 @@ namespace rinha_de_backend_2023.Controllers {
     public class PersonController : ControllerBase {
         private readonly IPersonRepository _repository;
 
-        public PersonController(IPersonRepository repository) {
-            _repository = repository;
-        }
+        public PersonController(IPersonRepository repository) { _repository = repository; }
 
         // Endpoint especial para contagem de pessoas cadastradas.
         [HttpGet("contagem-pessoas")]

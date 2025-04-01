@@ -24,17 +24,14 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 var app = builder.Build();
 
 // Applying migrations
-using (var scope = app.Services.CreateScope())
-{
+using (var scope = app.Services.CreateScope()) {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    try
-    {
+    try {
         db.Database.Migrate();
         Console.WriteLine("Migrações aplicadas com sucesso.");
     }
-    catch (Exception ex)
-    {
+    catch (Exception ex) {
         Console.WriteLine("Nenhuma migration aplicada.");
         Console.WriteLine("Motivo: " + ex.Message);
     }

@@ -3,8 +3,7 @@ using System.Globalization;
 
 namespace rinha_de_backend_2023.Entities;
 
-public class Person 
-{
+public class Person {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -30,29 +29,23 @@ public class Person
         Nascimento = nascimento;
     }
 
-    public static ValidationResult? ValidateNascimento(string nascimento, ValidationContext context)
-    {
-        if (!DateTime.TryParseExact(nascimento, "yyyy-MM-dd", 
-            CultureInfo.InvariantCulture, DateTimeStyles.None, out var data))
-        {
+    public static ValidationResult? ValidateNascimento(string nascimento, ValidationContext context) {
+        if (!DateTime.TryParseExact(nascimento, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var data)) {
             return new ValidationResult("Data inválida.");
         }
 
-        if (data > DateTime.Now)
-        {
+        if (data > DateTime.Now) {
             return new ValidationResult("Data não pode ser futura.");
         }
 
-        if (data.Year < 1900)
-        {
+        if (data.Year < 1900) {
             return new ValidationResult("Data muito antiga.");
         }
 
         return ValidationResult.Success;
     }
 
-   public override string ToString()
-    {
+   public override string ToString() {
         return $"Id: {Id}, Apelido: {Apelido}, Nome: {Nome}, Nascimento: {Nascimento}, Stack: {(Stack != null ? string.Join(", ", Stack) : "null")}";
     }
 }
