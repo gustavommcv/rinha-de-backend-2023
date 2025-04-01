@@ -13,52 +13,29 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
 
 // Configuring db context
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString, npgsqlOptions =>
-    {
-        npgsqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5,
-            maxRetryDelay: TimeSpan.FromSeconds(10),
-            errorCodesToAdd: null);
-    }));
+    options.UseNpgsql(connectionString)
+);
 
 var app = builder.Build();
 
 // Applying migrations
 using (var scope = app.Services.CreateScope())
 {
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    var retryCount = 0;
-    const int maxRetryCount = 5;
-    
-    while (retryCount < maxRetryCount)
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    try
     {
-        try
-        {
-            logger.LogInformation("Tentando aplicar migrations... Tentativa {RetryCount}", retryCount + 1);
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.Migrate();
-            logger.LogInformation("Migrations aplicadas com sucesso");
-            break;
-        }
-        catch (Npgsql.NpgsqlException ex)
-        {
-            retryCount++;
-            logger.LogError(ex, "Falha ao aplicar migrations");
-            
-            if (retryCount >= maxRetryCount)
-            {
-                logger.LogCritical("Número máximo de tentativas alcançado. Aplicação será encerrada");
-                throw;
-            }
-            
-            Thread.Sleep(5000 * retryCount);
-        }
+        db.Database.Migrate();
+        Console.WriteLine("Migrações aplicadas com sucesso.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Nenhuma migration aplicada.");
+        Console.WriteLine("Motivo: " + ex.Message);
     }
 }
 
-if (app.Environment.IsDevelopment()) {
-    app.UseDeveloperExceptionPage();
-}
+if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 // app.UseHttpsRedirection();
 
