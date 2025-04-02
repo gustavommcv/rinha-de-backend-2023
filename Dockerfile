@@ -17,10 +17,11 @@ WORKDIR /app
 # Copy the built application from the build stage
 COPY --from=build /out ./
 
-ENV DB_CONNECTION_STRING="Host=postgres_db;Port=5432;Database=rinha_db;Username=sample_user;Password=sample_password"
+# ENV DB_CONNECTION_STRING="Host=postgres_db;Port=5432;Database=rinha_db;Username=sample_user;Password=sample_password"
 
 # Expose the port the application runs on
-EXPOSE 8080
+# ENV APP_PORT=8080
+EXPOSE ${APP_PORT}
 
 # Set the entry point for the container
 ENTRYPOINT ["dotnet", "rinha-de-backend-2023.dll"]

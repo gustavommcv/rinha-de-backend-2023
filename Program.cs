@@ -5,11 +5,22 @@ using rinha_de_backend_2023.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", policy => {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Controllers support
 builder.Services.AddControllers();
 
+var port = Environment.GetEnvironmentVariable("APP_PORT") ?? "8080";
+
 // Getting connection string
-if (builder.Environment.IsDevelopment()) DotNetEnv.Env.Load();
+// if (builder.Environment.IsDevelopment()) DotNetEnv.Env.Load();
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
     throw new InvalidOperationException("A variável de ambiente 'DB_CONNECTION_STRING' não foi configurada.");
 
@@ -22,6 +33,9 @@ builder.Services.AddDbContextPool<AppDbContext>(options => {
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 var app = builder.Build();
+
+// CORS
+app.UseCors("AllowAll");
 
 // Applying migrations
 using (var scope = app.Services.CreateScope()) {
@@ -37,7 +51,7 @@ using (var scope = app.Services.CreateScope()) {
     }
 }
 
-if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
+// if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 // app.UseHttpsRedirection();
 
@@ -45,4 +59,4 @@ if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 app.UseRouting();
 app.MapControllers();
 
-app.Run();
+app.Run($"http://*:{port}");

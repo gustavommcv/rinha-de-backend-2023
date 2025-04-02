@@ -23,12 +23,12 @@ namespace rinha_de_backend_2023.Controllers {
 
             try {
                 var createdPerson = await _repository.AddPerson(pessoa);
-                Console.WriteLine(createdPerson.ToString());
+                // Console.WriteLine(createdPerson.ToString());
 
                 return CreatedAtAction(nameof(GetPessoa), new { id = createdPerson.Id }, createdPerson);
             }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+            catch (Exception) {
+                // Console.WriteLine(ex.Message);
                 return UnprocessableEntity();
             }
         }
@@ -40,8 +40,8 @@ namespace rinha_de_backend_2023.Controllers {
                 var person = await _repository.GetPersonById(id);
                 return Ok(person);
             }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+            catch (Exception) {
+                // Console.WriteLine(ex.Message);
                 return NotFound();
             }
         }
